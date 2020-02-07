@@ -24,30 +24,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long id) {
+    public Product findProductById(Long id) {
         Product product = repository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(String.format("id: %d does not exist", id)));
+        clickCounter(product);
         return product;
     }
 
     @Override
-    public Product getProductByName(String name) {
+    public Product findProductByName(String name) {
         Product product = repository.findProductByName(name).orElseThrow(() ->
                 new ProductNotFoundException(String.format("name: %s does not exist", name)));
+        clickCounter(product);
         return product;
     }
 
     @Override
-    public List<ProductDto> getAllProducts() {
+    public List<ProductDto> findAllProducts() {
+
         List<ProductDto> productsDto = new ArrayList<>();
-        repository.findAll().forEach(product -> productsDto.add(productConverter.toDto(product)));
+        repository.findAll().forEach(product -> {
+            clickCounter(product);
+            productsDto.add(productConverter.toDto(product));
+        });
+
         return productsDto;
     }
 
     @Override
     public Product createProduct(ProductDto productDto) {
-        repository.findProductByName(productDto.getName()).ifPresent(item -> {
-            throw new ProductDuplicateException(String.format("Product named: %s already exists in database scope"));
+        repository.findProductByName(productDto.getName()).ifPresent(product -> {
+            throw new ProductDuplicateException(
+                    String.format("Product named: %s already exists in database scope", productDto.getName()));
         });
 
         ProductAdditions productAdditions = new ProductAdditions(0L);
@@ -62,15 +70,17 @@ public class ProductServiceImpl implements ProductService {
         Product product = repository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(String.format("id: %d does not exist", id)));
 
-        if(repository.existsByName(productDto.getName())&&!product.getName().equals(productDto.getName())){
+        if (repository.existsByName(productDto.getName()) && !product.getName().equals(productDto.getName())) {
             throw new IllegalArgumentException(String.format("Duplicated name: %s", productDto.getName()));
         }
 
         Long clickCounter = product.getProductAdditions().getClickCounter();
         ProductAdditions productAdditions = new ProductAdditions(clickCounter);
         productDto.setProductAdditions(productAdditions);
+        product = productConverter.toEntity(productDto);
+        product.setId(id);
 
-        return repository.save(productConverter.toEntity(productDto));
+        return repository.save(product);
     }
 
     @Override
@@ -80,5 +90,10 @@ public class ProductServiceImpl implements ProductService {
         repository.deleteById(id);
     }
 
-
+    public void clickCounter(Product product){
+        ProductAdditions productAdditions = product.getProductAdditions();
+        productAdditions.setClickCounter(productAdditions.getClickCounter()+1);
+        product.setProductAdditions(productAdditions);
+        repository.save(product);
+    }
 }

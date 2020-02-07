@@ -28,35 +28,35 @@ public class ProductResource {
 
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
-        Product product = service.getProductById(id);
+        Product product = service.findProductById(id);
         return ResponseEntity.ok().body(product);
     }
 
-    @GetMapping("/product/{name}")
+    @GetMapping("/product/{name}/names")
     public ResponseEntity<?> getProductByName(@PathVariable String name) {
-        Product product = service.getProductByName(name);
+        Product product = service.findProductByName(name);
         return ResponseEntity.ok().body(product);
     }
 
-    @GetMapping("/products")
+    @GetMapping("/product")
     public ResponseEntity<List<ProductDto>> getAllProducts() {
-        List<ProductDto> productDtos = service.getAllProducts();
+        List<ProductDto> productDtos = service.findAllProducts();
         return ResponseEntity.ok().body(productDtos);
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Product> createUser(@Valid @RequestBody ProductDto productDto) throws URISyntaxException {
+    public ResponseEntity<Product> createUser(@Valid @RequestBody ProductDto productDto) {
         Product product = service.createProduct(productDto);
-        return ResponseEntity.created(new URI("/api/product/" + product.getName())).body(product);
+        return ResponseEntity.ok().body(product);
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/product/{id}")
     public ResponseEntity<Product> updateProduct(@Valid @RequestBody ProductDto productDto, @PathVariable Long id) {
         Product product = service.updateProduct(productDto, id);
         return ResponseEntity.ok().body(product);
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         service.deleteProduct(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
