@@ -5,10 +5,12 @@ import pl.haladyj.pawelhaladyjservice.exception.ProductDuplicateException;
 import pl.haladyj.pawelhaladyjservice.exception.ProductNotFoundException;
 import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
+import pl.haladyj.pawelhaladyjservice.model.ProductType;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = repository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(String.format("id: %d does not exist", id)));
         clickCounter(product);
+        calulateDiscountedPrice(product);
         return product;
     }
 
@@ -36,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = repository.findProductByName(name).orElseThrow(() ->
                 new ProductNotFoundException(String.format("name: %s does not exist", name)));
         clickCounter(product);
+        calulateDiscountedPrice(product);
         return product;
     }
 
@@ -45,6 +49,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDto> productsDto = new ArrayList<>();
         repository.findAll().forEach(product -> {
             clickCounter(product);
+            calulateDiscountedPrice(product);
             productsDto.add(productConverter.toDto(product));
         });
 
@@ -95,5 +100,20 @@ public class ProductServiceImpl implements ProductService {
         productAdditions.setClickCounter(productAdditions.getClickCounter()+1);
         product.setProductAdditions(productAdditions);
         repository.save(product);
+    }
+
+    public Product calulateDiscountedPrice(Product product){
+        Product prod = product;
+
+        BigDecimal price = product.getPrice();
+        ProductType productType = product.getType();
+        String discount = productType.getDiscount();
+        BigDecimal discountBG = new BigDecimal(discount);
+        BigDecimal discountedValue = price
+                .multiply((new BigDecimal(100).subtract(discountBG)))
+                .divide(new BigDecimal(100));
+        prod.setPrice(discountedValue);
+
+        return prod;
     }
 }
