@@ -1,15 +1,16 @@
 package pl.haladyj.pawelhaladyjservice.service;
 
-import org.springframework.stereotype.Service;
-import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
+import pl.haladyj.pawelhaladyjservice.model.Product;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
-@Service
-public class ProductService {
+import java.util.List;
 
-    private final ProductRepository repository;
+public interface ProductService {
 
-    public ProductService(ProductRepository repository) {
-        this.repository = repository;
-    }
-
+    Product getProductById(Long id);
+    Product getProductByName(String name);
+    List<ProductDto> getAllProducts();
+    Product createProduct (ProductDto productDto);
+    Product updateProduct (ProductDto productDto, Long id);
+    void deleteProduct (Long id);
 }

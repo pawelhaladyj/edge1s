@@ -1,56 +1,28 @@
-package pl.haladyj.pawelhaladyjservice.model;
+package pl.haladyj.pawelhaladyjservice.service.dto;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
+import pl.haladyj.pawelhaladyjservice.model.ProductType;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Entity
-@Table(name="product")
-public class Product {
+public class ProductDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "name")
-    @NotNull
     private String name;
-
-    @Column(name="description")
-    @NotNull
     private String description;
-
-    @Column(name="type")
-    @NotNull
-    @Enumerated(EnumType.STRING)
     private ProductType type;
-
-    @Column(name="price_no_discount")
-    @NotNull
     private BigDecimal price;
-
-    @Embedded
     private ProductAdditions productAdditions;
 
-    public Product(@NotNull String name, @NotNull String description, @NotNull ProductType type, @NotNull BigDecimal price, ProductAdditions productAdditions) {
+    public ProductDto() {
+    }
+
+    public ProductDto(String name, String description, ProductType type, BigDecimal price, ProductAdditions productAdditions) {
         this.name = name;
         this.description = description;
         this.type = type;
         this.price = price;
         this.productAdditions = productAdditions;
-    }
-
-    public Product() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -96,26 +68,24 @@ public class Product {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Product)) return false;
-        Product product = (Product) o;
-        return Objects.equals(getId(), product.getId()) &&
-                Objects.equals(getName(), product.getName()) &&
-                Objects.equals(getDescription(), product.getDescription()) &&
-                getType() == product.getType() &&
-                Objects.equals(getPrice(), product.getPrice()) &&
-                Objects.equals(getProductAdditions(), product.getProductAdditions());
+        if (!(o instanceof ProductDto)) return false;
+        ProductDto that = (ProductDto) o;
+        return Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getDescription(), that.getDescription()) &&
+                getType() == that.getType() &&
+                Objects.equals(getPrice(), that.getPrice()) &&
+                Objects.equals(getProductAdditions(), that.getProductAdditions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getType(), getPrice(), getProductAdditions());
+        return Objects.hash(getName(), getDescription(), getType(), getPrice(), getProductAdditions());
     }
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+        return "ProductDto{" +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", type=" + type +
                 ", price=" + price +
