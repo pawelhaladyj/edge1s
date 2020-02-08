@@ -49,7 +49,6 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDto> productsDto = new ArrayList<>();
         repository.findAll().forEach(product -> {
             clickCounter(product);
-            calulateDiscountedPrice(product);
             productsDto.add(productConverter.toDto(product));
         });
 
