@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name="product")
+@Table(name = "product")
 public class Product {
 
     @Id
@@ -18,16 +18,16 @@ public class Product {
     @NotNull
     private String name;
 
-    @Column(name="description")
+    @Column(name = "description")
     @NotNull
     private String description;
 
-    @Column(name="type")
+    @Column(name = "type")
     @NotNull
     @Enumerated(EnumType.STRING)
     private ProductType type;
 
-    @Column(name="price_no_discount")
+    @Column(name = "price_no_discount")
     @NotNull
     private BigDecimal price;
 

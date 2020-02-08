@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.haladyj.pawelhaladyjservice.model.Product;
+import pl.haladyj.pawelhaladyjservice.model.ProductType;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
@@ -15,11 +16,9 @@ import java.util.List;
 @RequestMapping("/api")
 public class ProductResource {
 
-    private final ProductRepository repository;
     private final ProductServiceImpl service;
 
-    public ProductResource(ProductRepository repository, ProductServiceImpl service) {
-        this.repository = repository;
+    public ProductResource(ProductServiceImpl service) {
         this.service = service;
     }
 
@@ -59,4 +58,6 @@ public class ProductResource {
         service.deleteProduct(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+
 }
