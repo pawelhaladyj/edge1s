@@ -13,7 +13,7 @@ public class ProductConverter implements Converter<Product, ProductDto> {
 
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice());
+        product.setPrice(productDto.getInitialPrice());
         product.setType(productDto.getType());
         product.setProductAdditions(productDto.getProductAdditions());
 
@@ -26,7 +26,7 @@ public class ProductConverter implements Converter<Product, ProductDto> {
 
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
-        productDto.setPrice(product.getPrice());
+        productDto.setInitialPrice(product.getPrice());
         productDto.setType(product.getType());
         productDto.setProductAdditions(product.getProductAdditions());
 

@@ -11,17 +11,24 @@ public class ProductDto {
     private String name;
     private String description;
     private ProductType type;
-    private BigDecimal price;
+    private BigDecimal initialPrice;
+    private BigDecimal discountedPrice;
     private ProductAdditions productAdditions;
 
     public ProductDto() {
     }
 
-    public ProductDto(String name, String description, ProductType type, BigDecimal price, ProductAdditions productAdditions) {
+    public ProductDto(String name,
+                      String description,
+                      ProductType type,
+                      BigDecimal initialPrice,
+                      BigDecimal discountedPrice,
+                      ProductAdditions productAdditions) {
         this.name = name;
         this.description = description;
         this.type = type;
-        this.price = price;
+        this.initialPrice = initialPrice;
+        this.discountedPrice = discountedPrice;
         this.productAdditions = productAdditions;
     }
 
@@ -49,12 +56,20 @@ public class ProductDto {
         this.type = type;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getInitialPrice() {
+        return initialPrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public BigDecimal getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(BigDecimal discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
+    public void setInitialPrice(BigDecimal price) {
+        this.initialPrice = price;
     }
 
     public ProductAdditions getProductAdditions() {
@@ -73,13 +88,14 @@ public class ProductDto {
         return Objects.equals(getName(), that.getName()) &&
                 Objects.equals(getDescription(), that.getDescription()) &&
                 getType() == that.getType() &&
-                Objects.equals(getPrice(), that.getPrice()) &&
+                Objects.equals(getInitialPrice(), that.getInitialPrice()) &&
+                Objects.equals(getDiscountedPrice(), that.getDiscountedPrice()) &&
                 Objects.equals(getProductAdditions(), that.getProductAdditions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getType(), getPrice(), getProductAdditions());
+        return Objects.hash(getName(), getDescription(), getType(), getInitialPrice(), getDiscountedPrice(), getProductAdditions());
     }
 
     @Override
@@ -88,7 +104,8 @@ public class ProductDto {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", type=" + type +
-                ", price=" + price +
+                ", initialPrice=" + initialPrice +
+                ", discountedPrice=" + discountedPrice +
                 ", productAdditions=" + productAdditions +
                 '}';
     }

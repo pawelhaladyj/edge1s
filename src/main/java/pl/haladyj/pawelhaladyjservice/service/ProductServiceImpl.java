@@ -26,21 +26,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findProductById(Long id) {
+    public ProductDto findProductById(Long id) {
         Product product = repository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(String.format("id: %d does not exist", id)));
         clickCounter(product);
-        calulateDiscountedPrice(product);
-        return product;
+        ProductDto productDto = productConverter.toDto(product);
+        productDto.setDiscountedPrice(calulateDiscountedPrice(product));
+        return productDto;
     }
 
     @Override
-    public Product findProductByName(String name) {
+    public ProductDto findProductByName(String name) {
         Product product = repository.findProductByName(name).orElseThrow(() ->
                 new ProductNotFoundException(String.format("name: %s does not exist", name)));
         clickCounter(product);
-        calulateDiscountedPrice(product);
-        return product;
+        ProductDto productDto = productConverter.toDto(product);
+        productDto.setDiscountedPrice(calulateDiscountedPrice(product));
+        return productDto;
     }
 
     @Override
@@ -49,7 +51,9 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDto> productsDto = new ArrayList<>();
         repository.findAll().forEach(product -> {
             clickCounter(product);
-            productsDto.add(productConverter.toDto(product));
+            ProductDto productDto = productConverter.toDto(product);
+            productDto.setDiscountedPrice(calulateDiscountedPrice(product));
+            productsDto.add(productDto);
         });
 
         return productsDto;
@@ -101,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
         repository.save(product);
     }
 
-    public Product calulateDiscountedPrice(Product product){
+    public BigDecimal calulateDiscountedPrice(Product product){
         Product prod = product;
 
         BigDecimal price = product.getPrice();
@@ -111,8 +115,7 @@ public class ProductServiceImpl implements ProductService {
         BigDecimal discountedValue = price
                 .multiply((new BigDecimal(100).subtract(discountBG)))
                 .divide(new BigDecimal(100));
-        prod.setPrice(discountedValue);
 
-        return prod;
+        return discountedValue;
     }
 }

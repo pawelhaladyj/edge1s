@@ -9,8 +9,6 @@ import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -28,14 +26,14 @@ public class ProductResource {
 
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
-        Product product = service.findProductById(id);
-        return ResponseEntity.ok().body(product);
+        ProductDto productDto = service.findProductById(id);
+        return ResponseEntity.ok().body(productDto);
     }
 
     @GetMapping("/product/{name}/names")
     public ResponseEntity<?> getProductByName(@PathVariable String name) {
-        Product product = service.findProductByName(name);
-        return ResponseEntity.ok().body(product);
+        ProductDto productDto = service.findProductByName(name);
+        return ResponseEntity.ok().body(productDto);
     }
 
     @GetMapping("/product")
