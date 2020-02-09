@@ -19,10 +19,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductConverter productConverter;
+    private final DiscountStrategy discountStrategy;
 
-    public ProductServiceImpl(ProductRepository repository, ProductConverter productConverter) {
+    public ProductServiceImpl(ProductRepository repository, ProductConverter productConverter, DiscountStrategy discountStrategy) {
         this.repository = repository;
         this.productConverter = productConverter;
+        this.discountStrategy = discountStrategy;
     }
 
     @Override
@@ -106,14 +108,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public BigDecimal calulateDiscountedPrice(Product product){
-        Product prod = product;
 
         BigDecimal price = product.getPrice();
-        ProductType productType = product.getType();
-        String discount = productType.getDiscount();
-        BigDecimal discountBG = new BigDecimal(discount);
+        BigDecimal discount = discountStrategy.pickDiscount(product.getType());
         BigDecimal discountedValue = price
-                .multiply((new BigDecimal(100).subtract(discountBG)))
+                .multiply((new BigDecimal(100).subtract(discount)))
                 .divide(new BigDecimal(100));
 
         return discountedValue;

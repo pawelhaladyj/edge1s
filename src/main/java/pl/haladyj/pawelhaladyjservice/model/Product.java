@@ -34,7 +34,12 @@ public class Product {
     @Embedded
     private ProductAdditions productAdditions;
 
-    public Product(@NotNull String name, @NotNull String description, @NotNull ProductType type, @NotNull BigDecimal price, ProductAdditions productAdditions) {
+    public Product(Long id, @NotNull String name,
+                   @NotNull String description,
+                   @NotNull ProductType type,
+                   @NotNull BigDecimal price,
+                   ProductAdditions productAdditions) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.type = type;
