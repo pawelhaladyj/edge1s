@@ -11,6 +11,7 @@ import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,12 +110,8 @@ public class ProductServiceImpl implements ProductService {
 
     public BigDecimal calulateDiscountedPrice(Product product){
 
-        BigDecimal price = product.getPrice();
-        BigDecimal discount = discountStrategy.pickDiscount(product.getType());
-        BigDecimal discountedValue = price
-                .multiply((new BigDecimal(100).subtract(discount)))
-                .divide(new BigDecimal(100));
-
-        return discountedValue;
+        return product.getPrice().multiply(
+                BigDecimal.valueOf(100).subtract(discountStrategy.pickDiscount(product.getType())))
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
     }
 }
