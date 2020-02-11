@@ -13,7 +13,7 @@ public class ProductDto {
     private ProductType type;
     private BigDecimal initialPrice;
     private BigDecimal discountedPrice;
-    private ProductAdditions productAdditions;
+
 
     public ProductDto() {
     }
@@ -22,14 +22,13 @@ public class ProductDto {
                       String description,
                       ProductType type,
                       BigDecimal initialPrice,
-                      BigDecimal discountedPrice,
-                      ProductAdditions productAdditions) {
+                      BigDecimal discountedPrice
+    ) {
         this.name = name;
         this.description = description;
         this.type = type;
         this.initialPrice = initialPrice;
         this.discountedPrice = discountedPrice;
-        this.productAdditions = productAdditions;
     }
 
     public String getName() {
@@ -72,13 +71,6 @@ public class ProductDto {
         this.initialPrice = price;
     }
 
-    public ProductAdditions getProductAdditions() {
-        return productAdditions;
-    }
-
-    public void setProductAdditions(ProductAdditions productAdditions) {
-        this.productAdditions = productAdditions;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -89,13 +81,14 @@ public class ProductDto {
                 Objects.equals(getDescription(), that.getDescription()) &&
                 getType() == that.getType() &&
                 Objects.equals(getInitialPrice(), that.getInitialPrice()) &&
-                Objects.equals(getDiscountedPrice(), that.getDiscountedPrice()) &&
-                Objects.equals(getProductAdditions(), that.getProductAdditions());
+                Objects.equals(getDiscountedPrice(), that.getDiscountedPrice());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getType(), getInitialPrice(), getDiscountedPrice(), getProductAdditions());
+        return Objects.hash(getName(), getDescription(), getType(), getInitialPrice(), getDiscountedPrice()
+
+        );
     }
 
     @Override
@@ -106,7 +99,6 @@ public class ProductDto {
                 ", type=" + type +
                 ", initialPrice=" + initialPrice +
                 ", discountedPrice=" + discountedPrice +
-                ", productAdditions=" + productAdditions +
                 '}';
     }
 }

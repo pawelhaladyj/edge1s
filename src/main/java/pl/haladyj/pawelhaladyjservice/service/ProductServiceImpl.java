@@ -80,9 +80,10 @@ public class ProductServiceImpl implements ProductService {
         });
 
         ProductAdditions productAdditions = new ProductAdditions(0L);
-        productDto.setProductAdditions(productAdditions);
+
 
         Product product = productConverter.toEntity(productDto);
+        product.setProductAdditions(productAdditions);
         return repository.save(product);
     }
 
@@ -97,8 +98,9 @@ public class ProductServiceImpl implements ProductService {
 
         Long clickCounter = product.getProductAdditions().getClickCounter();
         ProductAdditions productAdditions = new ProductAdditions(clickCounter);
-        productDto.setProductAdditions(productAdditions);
+
         product = productConverter.toEntity(productDto);
+        product.setProductAdditions(productAdditions);
         product.setId(id);
 
         return repository.save(product);
