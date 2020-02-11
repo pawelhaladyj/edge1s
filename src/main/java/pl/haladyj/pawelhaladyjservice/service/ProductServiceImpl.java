@@ -57,21 +57,6 @@ public class ProductServiceImpl implements ProductService {
         return productClicksDto;
     }
 
-
-
-
-
-/*    @Override
-    public ProductDto findProductByName(String name) {
-        Product product = repository.findProductByName(name).orElseThrow(() ->
-                new ProductNotFoundException(String.format("name: %s does not exist", name)));
-        product.setProductAdditions(clickCounter.updateCounter(product));
-        repository.save(product);
-        ProductDto productDto = productConverter.toDto(product);
-        productDto.setDiscountedPrice(discountStrategy.calulateDiscountedPrice(product));
-        return productDto;
-    }*/
-
     @Override
     public List<ProductDto> findAllProducts() {
 
