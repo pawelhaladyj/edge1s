@@ -5,10 +5,12 @@ import pl.haladyj.pawelhaladyjservice.exception.ProductDuplicateException;
 import pl.haladyj.pawelhaladyjservice.exception.ProductNotFoundException;
 import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
+import pl.haladyj.pawelhaladyjservice.model.converter.ProductClickConverter;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
 import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
 import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
 import java.util.ArrayList;
@@ -19,15 +21,18 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductConverter productConverter;
+    private final ProductClickConverter productClickConverter;
     private final ClickCounter clickCounter;
     private final DiscountStrategy discountStrategy;
 
     public ProductServiceImpl(ProductRepository repository,
                               ProductConverter productConverter,
+                              ProductClickConverter productClickConverter,
                               ClickCounter clickCounter,
                               DiscountStrategy discountStrategy) {
         this.repository = repository;
         this.productConverter = productConverter;
+        this.productClickConverter = productClickConverter;
         this.clickCounter = clickCounter;
         this.discountStrategy = discountStrategy;
     }
@@ -44,6 +49,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductClicksDto findProductClicks(Long id) {
+        Product product = repository.findById(id).orElseThrow(() ->
+                new ProductNotFoundException(String.format("id: %d does not exist", id)));
+
+        ProductClicksDto productClicksDto = productClickConverter.toDto(product);
+        return productClicksDto;
+    }
+
+
+
+
+
+/*    @Override
     public ProductDto findProductByName(String name) {
         Product product = repository.findProductByName(name).orElseThrow(() ->
                 new ProductNotFoundException(String.format("name: %s does not exist", name)));
@@ -52,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
         ProductDto productDto = productConverter.toDto(product);
         productDto.setDiscountedPrice(discountStrategy.calulateDiscountedPrice(product));
         return productDto;
-    }
+    }*/
 
     @Override
     public List<ProductDto> findAllProducts() {

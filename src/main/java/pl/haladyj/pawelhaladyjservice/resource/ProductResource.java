@@ -7,6 +7,7 @@ import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.model.ProductType;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
 import javax.validation.Valid;
@@ -29,10 +30,10 @@ public class ProductResource {
         return ResponseEntity.ok().body(productDto);
     }
 
-    @GetMapping("/product/{name}/names")
-    public ResponseEntity<?> getProductByName(@PathVariable String name) {
-        ProductDto productDto = service.findProductByName(name);
-        return ResponseEntity.ok().body(productDto);
+    @GetMapping("/product/{id}/clicks")
+    public ResponseEntity<?> getProductByName(@PathVariable Long id) {
+        ProductClicksDto productClicksDto = service.findProductClicks(id);
+        return ResponseEntity.ok().body(productClicksDto);
     }
 
     @GetMapping("/product")
