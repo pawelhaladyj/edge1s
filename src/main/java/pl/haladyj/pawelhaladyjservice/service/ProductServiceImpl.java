@@ -5,13 +5,12 @@ import pl.haladyj.pawelhaladyjservice.exception.ProductDuplicateException;
 import pl.haladyj.pawelhaladyjservice.exception.ProductNotFoundException;
 import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
-import pl.haladyj.pawelhaladyjservice.model.ProductType;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
+import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
+import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +19,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductConverter productConverter;
+    private final ClickCounter clickCounter;
     private final DiscountStrategy discountStrategy;
 
-    public ProductServiceImpl(ProductRepository repository, ProductConverter productConverter, DiscountStrategy discountStrategy) {
+    public ProductServiceImpl(ProductRepository repository, ProductConverter productConverter, ClickCounter clickCounter, DiscountStrategy discountStrategy) {
         this.repository = repository;
         this.productConverter = productConverter;
+        this.clickCounter = clickCounter;
         this.discountStrategy = discountStrategy;
     }
 
@@ -32,9 +33,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto findProductById(Long id) {
         Product product = repository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(String.format("id: %d does not exist", id)));
-        clickCounter(product);
+        product.setProductAdditions(clickCounter.updateCounter(product));
+        repository.save(product);
         ProductDto productDto = productConverter.toDto(product);
-        productDto.setDiscountedPrice(calulateDiscountedPrice(product));
+        productDto.setDiscountedPrice(discountStrategy.calulateDiscountedPrice(product));
         return productDto;
     }
 
@@ -42,9 +44,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto findProductByName(String name) {
         Product product = repository.findProductByName(name).orElseThrow(() ->
                 new ProductNotFoundException(String.format("name: %s does not exist", name)));
-        clickCounter(product);
+        product.setProductAdditions(clickCounter.updateCounter(product));
+        repository.save(product);
         ProductDto productDto = productConverter.toDto(product);
-        productDto.setDiscountedPrice(calulateDiscountedPrice(product));
+        productDto.setDiscountedPrice(discountStrategy.calulateDiscountedPrice(product));
         return productDto;
     }
 
@@ -53,9 +56,10 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDto> productsDto = new ArrayList<>();
         repository.findAll().forEach(product -> {
-            clickCounter(product);
+            product.setProductAdditions(clickCounter.updateCounter(product));
+            repository.save(product);
             ProductDto productDto = productConverter.toDto(product);
-            productDto.setDiscountedPrice(calulateDiscountedPrice(product));
+            productDto.setDiscountedPrice(discountStrategy.calulateDiscountedPrice(product));
             productsDto.add(productDto);
         });
 
@@ -101,17 +105,4 @@ public class ProductServiceImpl implements ProductService {
         repository.deleteById(id);
     }
 
-    public void clickCounter(Product product){
-        ProductAdditions productAdditions = product.getProductAdditions();
-        productAdditions.setClickCounter(productAdditions.getClickCounter()+1);
-        product.setProductAdditions(productAdditions);
-        repository.save(product);
-    }
-
-    public BigDecimal calulateDiscountedPrice(Product product){
-
-        return product.getPrice().multiply(
-                BigDecimal.valueOf(100).subtract(discountStrategy.pickDiscount(product.getType())))
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-    }
 }
