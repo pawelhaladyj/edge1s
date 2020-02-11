@@ -22,7 +22,10 @@ public class ProductServiceImpl implements ProductService {
     private final ClickCounter clickCounter;
     private final DiscountStrategy discountStrategy;
 
-    public ProductServiceImpl(ProductRepository repository, ProductConverter productConverter, ClickCounter clickCounter, DiscountStrategy discountStrategy) {
+    public ProductServiceImpl(ProductRepository repository,
+                              ProductConverter productConverter,
+                              ClickCounter clickCounter,
+                              DiscountStrategy discountStrategy) {
         this.repository = repository;
         this.productConverter = productConverter;
         this.clickCounter = clickCounter;
