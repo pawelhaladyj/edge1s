@@ -7,6 +7,7 @@ import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductUpdateDto;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -69,10 +70,10 @@ public class ProductResource {
         return ResponseEntity.ok().body(product);
     }
 
-    @PutMapping("/product/{id}")
-    public ResponseEntity<Product> updateProduct(@Valid @RequestBody ProductDto productDto, @PathVariable Long id) {
-        Product product = service.updateProduct(productDto, id);
-        return ResponseEntity.ok().body(product);
+    @PutMapping("/product")
+    public ResponseEntity<Product> updateProduct(@Valid @RequestBody ProductUpdateDto productUpdateDto) {
+        Product productRepository = service.updateProduct(productUpdateDto);
+        return ResponseEntity.ok().body(productRepository);
     }
 
     @DeleteMapping("/product/{id}")

@@ -7,11 +7,13 @@ import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductClickConverter;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
+import pl.haladyj.pawelhaladyjservice.model.converter.ProductUpdateConverter;
 import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
 import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductUpdateDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +24,20 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final ProductConverter productConverter;
     private final ProductClickConverter productClickConverter;
+    private final ProductUpdateConverter productUpdateConverter;
     private final ClickCounter clickCounter;
     private final DiscountStrategy discountStrategy;
 
     public ProductServiceImpl(ProductRepository repository,
                               ProductConverter productConverter,
                               ProductClickConverter productClickConverter,
+                              ProductUpdateConverter productUpdateConverter,
                               ClickCounter clickCounter,
                               DiscountStrategy discountStrategy) {
         this.repository = repository;
         this.productConverter = productConverter;
         this.productClickConverter = productClickConverter;
+        this.productUpdateConverter = productUpdateConverter;
         this.clickCounter = clickCounter;
         this.discountStrategy = discountStrategy;
     }
@@ -88,20 +93,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(ProductDto productDto, Long id) {
+    public Product updateProduct(ProductUpdateDto productUpdateDto) {
+        Long id = productUpdateDto.getId();
         Product product = repository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(String.format("id: %d does not exist", id)));
 
-        if (repository.existsByName(productDto.getName()) && !product.getName().equals(productDto.getName())) {
-            throw new IllegalArgumentException(String.format("Duplicated name: %s", productDto.getName()));
+        if (repository.existsByName(productUpdateDto.getName()) && !product.getName().equals(productUpdateDto.getName())) {
+            throw new IllegalArgumentException(String.format("Duplicated name: %s", productUpdateDto.getName()));
         }
-
-        Long clickCounter = product.getProductAdditions().getClickCounter();
-        ProductAdditions productAdditions = new ProductAdditions(clickCounter);
-
-        product = productConverter.toEntity(productDto);
+        ProductAdditions productAdditions = product.getProductAdditions();
+        product = productUpdateConverter.toEntity(productUpdateDto);
         product.setProductAdditions(productAdditions);
-        product.setId(id);
 
         return repository.save(product);
     }
