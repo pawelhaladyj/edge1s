@@ -17,6 +17,7 @@ import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
 import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
 
 import java.util.Optional;
 
@@ -67,6 +68,42 @@ class PawelHaladyjServiceApplicationTests {
 		//when
 		Exception exception = Assertions.assertThrows(
 				ProductNotFoundException.class, () -> productService.deleteProduct(mockId));
+		//then
+		Assert.assertEquals("id: " + mockId + " does not exist", exception.getMessage());
+	}
+
+	@Test
+	void testFindProductClicks() {
+		//given
+		Long mockId = Mockito.anyLong();
+
+		Product product = new Product();
+		product.setId(mockId);
+
+		ProductClicksDto actual = new ProductClicksDto();
+		actual.setId(mockId);
+
+		Optional<Product> productOptional = Optional.of(product);
+		Mockito.when(productRepository.findById(mockId)).thenReturn(productOptional);
+		Mockito.when(productClickConverter.toDto(productOptional.get())).thenReturn(actual);
+
+		//when
+		ProductClicksDto result = productService.findProductClicks(mockId);
+
+		//then
+		Assert.assertEquals(actual, result);
+	}
+
+	@Test
+	void testFindProductClicks_NoProductThrowsException() {
+		//given
+		Long mockId = Mockito.anyLong();
+		Optional<Product> emptyOptional = Optional.empty();
+		Mockito.when(productRepository.findById(mockId)).thenReturn(emptyOptional);
+
+		//when
+		Exception exception = Assertions.assertThrows(
+				ProductNotFoundException.class, () -> productService.findProductClicks(mockId));
 		//then
 		Assert.assertEquals("id: " + mockId + " does not exist", exception.getMessage());
 	}
