@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.haladyj.pawelhaladyjservice.exception.ProductNotFoundException;
 import pl.haladyj.pawelhaladyjservice.model.Product;
+import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductClickConverter;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
 import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
@@ -18,7 +19,9 @@ import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @SpringBootTest
@@ -107,5 +110,52 @@ class PawelHaladyjServiceApplicationTests {
 		//then
 		Assert.assertEquals("id: " + mockId + " does not exist", exception.getMessage());
 	}
+
+	@Test
+	void testFindProductById() {
+		//given
+		Long mockId = Mockito.anyLong();
+
+		BigDecimal actualDiscountedPrice = new BigDecimal("2.22");
+
+		Product product = new Product();
+		product.setId(mockId);
+
+		ProductDto actual = new ProductDto();
+
+		ProductAdditions productAdditions = new ProductAdditions();
+
+		Optional<Product> productOptional = Optional.of(product);
+		Mockito.when(productRepository.findById(mockId)).thenReturn(productOptional);
+		Mockito.when(productConverter.toDto(productOptional.get())).thenReturn(actual);
+		Mockito.when(discountStrategy.calculateDiscountedPrice(productOptional.get())).thenReturn(actualDiscountedPrice);
+		Mockito.when(clickCounter.updateCounter(productOptional.get())).thenReturn(productAdditions);
+
+		//when
+		ProductDto result = productService.findProductById(mockId);
+
+		//then
+		Mockito.verify(productRepository, Mockito.times(1)).save(Mockito.any(Product.class));
+		Assert.assertEquals(actual, result);
+		Assert.assertEquals(actualDiscountedPrice, result.getDiscountedPrice());
+		Assert.assertEquals(productAdditions, productOptional.get().getProductAdditions());
+	}
+
+	@Test
+	void testFindProductById_NoProductThrowsException() {
+		//given
+		Long mockId = Mockito.anyLong();
+		Optional<Product> emptyOptional = Optional.empty();
+		Mockito.when(productRepository.findById(mockId)).thenReturn(emptyOptional);
+
+		//when
+		Exception exception = Assertions.assertThrows(
+				ProductNotFoundException.class, () -> productService.findProductById(mockId));
+
+		//then
+		Assert.assertEquals("id: " + mockId + " does not exist", exception.getMessage());
+	}
+
+
 
 }
