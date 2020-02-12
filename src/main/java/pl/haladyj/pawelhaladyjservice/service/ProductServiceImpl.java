@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
         product.setProductAdditions(clickCounter.updateCounter(product));
         repository.save(product);
         ProductDto productDto = productConverter.toDto(product);
-        productDto.setDiscountedPrice(discountStrategy.calulateDiscountedPrice(product));
+        productDto.setDiscountedPrice(discountStrategy.calculateDiscountedPrice(product));
         return productDto;
     }
 
@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
             product.setProductAdditions(clickCounter.updateCounter(product));
             repository.save(product);
             ProductDto productDto = productConverter.toDto(product);
-            productDto.setDiscountedPrice(discountStrategy.calulateDiscountedPrice(product));
+            productDto.setDiscountedPrice(discountStrategy.calculateDiscountedPrice(product));
             productsDto.add(productDto);
         });
 

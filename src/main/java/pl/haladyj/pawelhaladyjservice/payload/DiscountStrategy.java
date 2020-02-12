@@ -27,7 +27,7 @@ public class DiscountStrategy {
         }
     }
 
-    public BigDecimal calulateDiscountedPrice(Product product){
+    public BigDecimal calculateDiscountedPrice(Product product){
         return product.getPrice().multiply(
                 BigDecimal.valueOf(100).subtract(DiscountStrategy.pickDiscount(product.getType())))
                 .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
