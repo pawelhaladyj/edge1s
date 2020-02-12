@@ -22,6 +22,8 @@ import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -46,9 +48,9 @@ class PawelHaladyjServiceApplicationTests {
 	@InjectMocks
 	private ProductServiceImpl productService;
 
-	@Test
+/*	@Test
 	void contextLoads() {
-	}
+	}*/
 
 	@Test
 	void testDeleteProduct() {
@@ -121,6 +123,7 @@ class PawelHaladyjServiceApplicationTests {
 		Product product = new Product();
 		product.setId(mockId);
 
+		//expected
 		ProductDto actual = new ProductDto();
 
 		ProductAdditions productAdditions = new ProductAdditions();
@@ -132,6 +135,7 @@ class PawelHaladyjServiceApplicationTests {
 		Mockito.when(clickCounter.updateCounter(productOptional.get())).thenReturn(productAdditions);
 
 		//when
+		//actual
 		ProductDto result = productService.findProductById(mockId);
 
 		//then
@@ -155,6 +159,63 @@ class PawelHaladyjServiceApplicationTests {
 		//then
 		Assert.assertEquals("id: " + mockId + " does not exist", exception.getMessage());
 	}
+
+	@Test
+	void testFindAllProducts_TwoProducts() {
+		//given
+		Product productOne = new Product();
+		productOne.setId(1l);
+
+		Product productTwo = new Product();
+		productOne.setId(2l);
+
+		List<Product> products = new ArrayList<>();
+		products.add(productOne);
+		products.add(productTwo);
+
+		int count = products.size();
+
+		ProductAdditions productAdditions = new ProductAdditions();
+
+		BigDecimal priceOne = new BigDecimal("1.11");
+		BigDecimal priceTwo = new BigDecimal("2.22");
+
+		Mockito.when(productRepository.findAll()).thenReturn(products);
+		Mockito.when(productConverter.toDto(productOne)).thenReturn(new ProductDto());
+		Mockito.when(productConverter.toDto(productTwo)).thenReturn(new ProductDto());
+		Mockito.when(discountStrategy.calculateDiscountedPrice(productOne)).thenReturn(priceOne);
+		Mockito.when(discountStrategy.calculateDiscountedPrice(productTwo)).thenReturn(priceTwo);
+		Mockito.when(clickCounter.updateCounter(productOne)).thenReturn(productAdditions);
+		Mockito.when(clickCounter.updateCounter(productTwo)).thenReturn(productAdditions);
+
+		//when
+		List<ProductDto> productDtos = productService.findAllProducts();
+
+		//then
+		Assert.assertNotNull(productDtos);
+		Assert.assertFalse(productDtos.isEmpty());
+		Assert.assertEquals(count, productDtos.size());
+		Mockito.verify(productRepository, Mockito.times(count)).save(Mockito.any(Product.class));
+		Assert.assertEquals(productAdditions, productOne.getProductAdditions());
+		Assert.assertEquals(productAdditions, productTwo.getProductAdditions());
+		Assert.assertEquals(priceOne, productDtos.get(0).getDiscountedPrice());
+		Assert.assertEquals(priceTwo, productDtos.get(1).getDiscountedPrice());
+	}
+
+	@Test
+	void testFindAllProducts_NoProducts() {
+		//given
+		Mockito.when(productRepository.findAll()).thenReturn(new ArrayList<>());
+
+		//when
+		List<ProductDto> products = productService.findAllProducts();
+
+		//then
+		Assert.assertNotNull(products);
+		Assert.assertTrue(products.isEmpty());
+	}
+
+
 
 
 
