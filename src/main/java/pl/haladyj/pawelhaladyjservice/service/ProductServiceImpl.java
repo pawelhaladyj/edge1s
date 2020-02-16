@@ -9,6 +9,11 @@ import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.nonNull;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -28,14 +33,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findProductById(Long id) {
-        Product product = repository.findById(id).orElseThrow(() ->
-                new ProductNotFoundException(String.format("id: %d does not exist", id)));
-        product.setClickCounter(clickCounter.updateCounter(product));
-        repository.save(product);
-        ProductDto productDto = productConverter.toDto(product);
-        productDto.setDiscountedPrice(discountStrategy.calculateDiscountedPrice(product));
-        return productDto;
+    public Optional<ProductDto> findProductById(Long id) {
+
+        checkArgument(nonNull(id), "Expected non-null id");
+
+        return repository
+                .findById(id)
+                .map(product -> {
+                    product.setClickCounter(clickCounter.updateCounter(product));
+                    product = repository.save(product);
+                    ProductDto productDto = productConverter.toDto(product);
+                    productDto.setDiscountedPrice(discountStrategy.calculateDiscountedPrice(product));
+                    return productDto;
+                });
     }
 
 }
