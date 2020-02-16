@@ -1,6 +1,5 @@
 package pl.haladyj.pawelhaladyjservice.service.dto;
 
-import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
 import pl.haladyj.pawelhaladyjservice.model.ProductType;
 
 import java.math.BigDecimal;

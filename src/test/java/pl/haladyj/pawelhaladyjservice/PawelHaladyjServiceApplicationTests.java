@@ -1,28 +1,7 @@
 package pl.haladyj.pawelhaladyjservice;
 
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
-import pl.haladyj.pawelhaladyjservice.exception.ProductNotFoundException;
-import pl.haladyj.pawelhaladyjservice.model.Product;
-import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
-import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
-import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
-import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
-import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
-import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
-import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 //@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)

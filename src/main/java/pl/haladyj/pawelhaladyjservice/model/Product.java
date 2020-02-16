@@ -27,7 +27,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductType type;
 
-    @Column(name = "price_no_discount")
+    @Column(name = "price")
     @NotNull
     private BigDecimal price;
 

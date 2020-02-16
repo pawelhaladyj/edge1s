@@ -2,7 +2,6 @@ package pl.haladyj.pawelhaladyjservice.payload;
 
 import org.springframework.stereotype.Component;
 import pl.haladyj.pawelhaladyjservice.model.Product;
-import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
 
 @Component
 public class ClickCounter {
