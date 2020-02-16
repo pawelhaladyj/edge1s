@@ -12,31 +12,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import pl.haladyj.pawelhaladyjservice.exception.ProductNotFoundException;
 import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
-import pl.haladyj.pawelhaladyjservice.model.ProductType;
-import pl.haladyj.pawelhaladyjservice.model.converter.ProductClickConverter;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
 import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
 import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
 import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
-import pl.haladyj.pawelhaladyjservice.service.dto.ProductClicksDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@SpringBootTest
+//@SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 class PawelHaladyjServiceApplicationTests {
+/*
 
     @Mock
     private ProductRepository productRepository;
-
-    @Mock
-    private ProductClickConverter productClickConverter;
 
     @Mock
     private ProductConverter productConverter;
@@ -50,9 +44,11 @@ class PawelHaladyjServiceApplicationTests {
     @InjectMocks
     private ProductServiceImpl productService;
 
+*/
 /*	@Test
 	void contextLoads() {
-	}*/
+	}*//*
+
 
     @Test
     void testDeleteProduct() {
@@ -216,6 +212,7 @@ class PawelHaladyjServiceApplicationTests {
         Assert.assertNotNull(products);
         Assert.assertTrue(products.isEmpty());
     }
+*/
 
 
 }
