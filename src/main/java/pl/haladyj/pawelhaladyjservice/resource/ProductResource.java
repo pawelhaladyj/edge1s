@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.haladyj.pawelhaladyjservice.service.ProductServiceImpl;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductCounterDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
 import java.util.Optional;
@@ -26,4 +27,11 @@ public class ProductResource {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/product-counter/{id}")
+    public ResponseEntity<ProductCounterDto> getProductClicksById(@PathVariable Long id){
+        Optional<ProductCounterDto> productCounterDto = service.findProductCountsById(id);
+        return productCounterDto
+                .map(response -> (ResponseEntity.ok().body(response)))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }

@@ -7,6 +7,7 @@ import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
 import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
 import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
 import pl.haladyj.pawelhaladyjservice.repository.ProductRepository;
+import pl.haladyj.pawelhaladyjservice.service.dto.ProductCounterDto;
 import pl.haladyj.pawelhaladyjservice.service.dto.ProductDto;
 
 import java.util.Optional;
@@ -46,6 +47,16 @@ public class ProductServiceImpl implements ProductService {
                     productDto.setDiscountedPrice(discountStrategy.calculateDiscountedPrice(product));
                     return productDto;
                 });
+    }
+
+    @Override
+    public Optional<ProductCounterDto> findProductCountsById(Long id) {
+
+        checkArgument(nonNull(id), "Expected non-null id");
+
+        return repository
+                .findById(id)
+                .map(productConverter::toCounterDto);
     }
 
 }
