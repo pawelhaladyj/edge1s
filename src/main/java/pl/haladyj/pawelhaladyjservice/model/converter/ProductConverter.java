@@ -26,6 +26,7 @@ public class ProductConverter implements Converter<Product, ProductDto> {
         productDto.setDescription(product.getDescription());
         productDto.setInitialPrice(product.getPrice());
         productDto.setType(product.getType());
+        productDto.setClickCounter(product.getClickCounter());
         return productDto;
     }
 }

@@ -7,10 +7,12 @@ import pl.haladyj.pawelhaladyjservice.model.ProductAdditions;
 @Component
 public class ClickCounter {
 
-    public ProductAdditions updateCounter(Product product){
-        ProductAdditions productAdditions = product.getProductAdditions();
-        Long currentClicks = productAdditions.getClickCounter();
-        productAdditions.setClickCounter(currentClicks+1);
-        return productAdditions;
+    public Long updateCounter(Product product){
+
+        Long currentClickCounter = product.getClickCounter();
+        Long updatedClickCounter = currentClickCounter + 1;
+        product.setClickCounter(updatedClickCounter);
+
+        return updatedClickCounter;
     }
 }

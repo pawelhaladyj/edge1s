@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto findProductById(Long id) {
         Product product = repository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(String.format("id: %d does not exist", id)));
-        product.setProductAdditions(clickCounter.updateCounter(product));
+        product.setClickCounter(clickCounter.updateCounter(product));
         repository.save(product);
         ProductDto productDto = productConverter.toDto(product);
         productDto.setDiscountedPrice(discountStrategy.calculateDiscountedPrice(product));

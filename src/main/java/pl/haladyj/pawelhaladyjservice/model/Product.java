@@ -31,23 +31,19 @@ public class Product {
     @NotNull
     private BigDecimal price;
 
-    @Embedded
-    private ProductAdditions productAdditions;
+    @Column(name="click_counter")
+    @NotNull
+    private Long clickCounter;
 
-    public Product(Long id, @NotNull String name,
-                   @NotNull String description,
-                   @NotNull ProductType type,
-                   @NotNull BigDecimal price,
-                   ProductAdditions productAdditions) {
-        this.id = id;
+    public Product() {
+    }
+
+    public Product(@NotNull String name, @NotNull String description, @NotNull ProductType type, @NotNull BigDecimal price, @NotNull Long clickCounter) {
         this.name = name;
         this.description = description;
         this.type = type;
         this.price = price;
-        this.productAdditions = productAdditions;
-    }
-
-    public Product() {
+        this.clickCounter = clickCounter;
     }
 
     public Long getId() {
@@ -90,12 +86,12 @@ public class Product {
         this.price = price;
     }
 
-    public ProductAdditions getProductAdditions() {
-        return productAdditions;
+    public Long getClickCounter() {
+        return clickCounter;
     }
 
-    public void setProductAdditions(ProductAdditions productAdditions) {
-        this.productAdditions = productAdditions;
+    public void setClickCounter(Long clickCounter) {
+        this.clickCounter = clickCounter;
     }
 
     @Override
@@ -108,12 +104,12 @@ public class Product {
                 Objects.equals(getDescription(), product.getDescription()) &&
                 getType() == product.getType() &&
                 Objects.equals(getPrice(), product.getPrice()) &&
-                Objects.equals(getProductAdditions(), product.getProductAdditions());
+                Objects.equals(getClickCounter(), product.getClickCounter());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getType(), getPrice(), getProductAdditions());
+        return Objects.hash(getId(), getName(), getDescription(), getType(), getPrice(), getClickCounter());
     }
 
     @Override
@@ -124,7 +120,7 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", type=" + type +
                 ", price=" + price +
-                ", productAdditions=" + productAdditions +
+                ", clickCounter=" + clickCounter +
                 '}';
     }
 }

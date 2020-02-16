@@ -13,22 +13,18 @@ public class ProductDto {
     private ProductType type;
     private BigDecimal initialPrice;
     private BigDecimal discountedPrice;
-
+    private Long clickCounter;
 
     public ProductDto() {
     }
 
-    public ProductDto(String name,
-                      String description,
-                      ProductType type,
-                      BigDecimal initialPrice,
-                      BigDecimal discountedPrice
-    ) {
+    public ProductDto(String name, String description, ProductType type, BigDecimal initialPrice, BigDecimal discountedPrice, Long clickCounter) {
         this.name = name;
         this.description = description;
         this.type = type;
         this.initialPrice = initialPrice;
         this.discountedPrice = discountedPrice;
+        this.clickCounter = clickCounter;
     }
 
     public String getName() {
@@ -59,6 +55,10 @@ public class ProductDto {
         return initialPrice;
     }
 
+    public void setInitialPrice(BigDecimal initialPrice) {
+        this.initialPrice = initialPrice;
+    }
+
     public BigDecimal getDiscountedPrice() {
         return discountedPrice;
     }
@@ -67,10 +67,13 @@ public class ProductDto {
         this.discountedPrice = discountedPrice;
     }
 
-    public void setInitialPrice(BigDecimal price) {
-        this.initialPrice = price;
+    public Long getClickCounter() {
+        return clickCounter;
     }
 
+    public void setClickCounter(Long clickCounter) {
+        this.clickCounter = clickCounter;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -81,14 +84,13 @@ public class ProductDto {
                 Objects.equals(getDescription(), that.getDescription()) &&
                 getType() == that.getType() &&
                 Objects.equals(getInitialPrice(), that.getInitialPrice()) &&
-                Objects.equals(getDiscountedPrice(), that.getDiscountedPrice());
+                Objects.equals(getDiscountedPrice(), that.getDiscountedPrice()) &&
+                Objects.equals(getClickCounter(), that.getClickCounter());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getType(), getInitialPrice(), getDiscountedPrice()
-
-        );
+        return Objects.hash(getName(), getDescription(), getType(), getInitialPrice(), getDiscountedPrice(), getClickCounter());
     }
 
     @Override
@@ -99,6 +101,7 @@ public class ProductDto {
                 ", type=" + type +
                 ", initialPrice=" + initialPrice +
                 ", discountedPrice=" + discountedPrice +
+                ", clickCounter=" + clickCounter +
                 '}';
     }
 }
