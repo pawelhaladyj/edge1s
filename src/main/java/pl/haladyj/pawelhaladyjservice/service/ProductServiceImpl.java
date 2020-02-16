@@ -1,8 +1,6 @@
 package pl.haladyj.pawelhaladyjservice.service;
 
 import org.springframework.stereotype.Service;
-import pl.haladyj.pawelhaladyjservice.exception.ProductNotFoundException;
-import pl.haladyj.pawelhaladyjservice.model.Product;
 import pl.haladyj.pawelhaladyjservice.model.converter.ProductConverter;
 import pl.haladyj.pawelhaladyjservice.payload.ClickCounter;
 import pl.haladyj.pawelhaladyjservice.payload.DiscountStrategy;
